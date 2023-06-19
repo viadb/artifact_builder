@@ -1,4 +1,5 @@
 import indexer
+import psqlrc
 from filemap import fileMap
 import json 
 import ndjson
@@ -7,8 +8,6 @@ from re import sub, escape, MULTILINE
 from os import remove
 
 sqlDirectory = "../sql/"
-global _engine
-_engine: str
 
 def main():
 
@@ -18,6 +17,7 @@ def main():
     parser.add_argument("-o", "--output-ndjson", help="Output ndjson artifact", required=False, type=str, default="./ndindex.json")
     parser.add_argument("-v", "--verbose", help="Kind of debug", default=False, action=argparse.BooleanOptionalAction)
     parser.add_argument("-E", "--engine", help="Engine name", default="postgres", type=str, required=True)
+    parser.add_argument("-p", "--output-psqlrc", help="psqlrc artifact", required=False, type=str, default="./.psqlrc")
     args = parser.parse_args()
 
     fileMap = indexer.indexDir(args.directory, args.engine)
@@ -47,6 +47,9 @@ def main():
         input.close()
 
     remove(args.output_ndjson + '.temp')
+
+    if args.engine == "postgres":
+        psqlrc.generatePsqlrc(fileMap, args.output_psqlrc)
 
 if __name__ == "__main__":
     main()
