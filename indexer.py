@@ -26,11 +26,11 @@ def indexDir(sqlDirectory: str, _engine: str) -> fileMap:
                 with open(fpath, encoding="utf-8") as f:
                     _fileMap[key].update({'fpath': fpath, 
                                         'category': root.removeprefix(sqlDirectory + '/'),
-                                        'query': f.read().replace("'","''")})
+                                        'query': f.read().replace("'","''").replace(":", r"\:")})
             elif filename.endswith(".md") and filename.removesuffix(".md").lower()  not in ('readme', '.gitkeep'):
                 with open(fpath, encoding="utf-8") as f:
                     _fileMap[key].update({'docFPath': fpath,
-                                          'doc': f.read().replace("'","''")})
+                                          'doc': f.read().replace("'","''").replace(":", r"\:")})
             else:
                 pass
 
